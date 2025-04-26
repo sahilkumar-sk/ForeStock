@@ -1,0 +1,353 @@
+/* Body and Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding-top: 90px;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Loading Spinner Styles */
+/* CSS for the Loading Spinner */
+#loading-spinner {
+    text-align: center;
+    margin-top: 20px; /* Adjust margin if needed */
+    font-size: 18px; /* You can increase the font size if you want the spinner text bigger */
+}
+
+#loading-spinner i {
+    font-size: 20px; /* Spinner size */
+    color: #1F8A70;
+}
+
+.loading{
+    font-size: 16px;
+    color: #1F8A70;
+}
+/* Animation for spinning effect */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+body.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Navbar Styles */
+header {
+    background-color: white;
+    padding: 3px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header .logo {
+    max-height: 75px; /* Adjust as needed */
+    max-width: 250px; /* Adjust as needed */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+}
+
+.navbar li {
+    display: inline-block;
+}
+
+.navbar a {
+    color: #007B59;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #007B59;
+    color: #fff;
+}
+
+.navbar .active {
+    background-color: #007B59;
+    color: #fff;
+}
+
+.search-container {
+    width: 500px;
+    margin: auto 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#stock-search {
+    padding: 10px;
+    width: 60%;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+#stock-search:focus {
+    outline: none;
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    margin-right: 5px;
+}
+#search-button {
+    padding: 10px 20px;
+    background-color: #1F8A70;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Icons in Navbar */
+.nav-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-icons .icon {
+    color: #1F8A70;
+    font-size: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-icons .icon:hover {
+    color: #007B59;
+}
+
+/* Prediction Section */
+.prediction-section {
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.prediction-section h2 {
+    font-size: 32px;
+    color: #1F8A70;
+    margin-bottom: 20px;
+}
+
+.prediction-section p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Prediction Form */
+.prediction-container form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#stock-ticker {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#predict-button {
+    padding: 10px 20px;
+    background-color: #1F8A70;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+#predict-button:hover {
+    background-color: #007B59;
+}
+
+/* Prediction Results Section */
+.results-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#prediction-results h3 {
+    font-size: 24px;
+    color: #333;
+}
+
+#prediction-price {
+    font-size: 20px;
+    color: #007B59;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Prediction Table Styling */
+#prediction-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#prediction-table th, #prediction-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#prediction-table th {
+    background-color: #1F8A70;
+    color: white;
+    font-weight: bold;
+}
+
+#prediction-table td {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+#prediction-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Chart Styling */
+#prediction-chart {
+    margin-top: 30px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 400px; /* Set height of the chart */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #1F8A70; /* Match your teal green color */
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.footer-item {
+    width: 30%;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.footer-item h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.footer-item p, .footer-item ul {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.footer-item a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-item a:hover {
+    text-decoration: underline;
+}
+
+.contact-links {
+    list-style: none;
+    padding: 0;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+}
+
+.social-links li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.social-links a {
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.social-links i {
+    font-size: 20px; /* Size of the icons */
+}
+
+@media (max-width: 768px) {
+    .footer-item {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Dark Mode for Prediction Section */
+body.dark-mode .prediction-section {
+    background-color: #444; /* Dark background for prediction section */
+}
+
+body.dark-mode .prediction-section h2 {
+    color: #fff; /* White text for heading */
+}
+
+body.dark-mode .prediction-section p {
+    color: #ddd; /* Lighter text for description */
+}
+
+/* Dark Mode for Prediction Table */
+body.dark-mode #prediction-table th {
+    background-color: #007B59;
+}
+
+body.dark-mode #prediction-table td {
+    background-color: #444;
+    color: #fff;
+}
+
+body.dark-mode #prediction-price {
+    color: #00ff99;
+}
