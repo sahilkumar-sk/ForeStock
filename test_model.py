@@ -1,23 +1,27 @@
-from keras.models import load_model
-from api_handler import get_stock_data
-from utils.preprocessing import preprocess_data_with_sentiment, prepare_data
-import numpy as np
+import io
 import pandas as pd
-from datetime import timedelta
-import pandas_market_calendars as mcal
+import numpy as np
+from keras.models import load_model
+from api_handler import get_stock_data  # If this is still needed for some data, otherwise it can be removed
+from utils.preprocessing import preprocess_data_with_sentiment, prepare_data
 import tensorflow as tf
 
-def get_predicted_prices(stock_symbol, prediction_days=[1, 15, 30]):
+# Load the model once when the app starts
+model = load_model('stock_prediction_model_with_tuned_hyperparameters.keras')  # Load the model globally
+
+def get_predicted_prices(stock_symbol, prediction_days=[1, 15, 30], download_csv=False):
     try:
+        if stock_symbol is None:
+            raise ValueError("Stock symbol cannot be None")  # Ensure stock_symbol is provided
+
         print(f"Predicting price for stock: {stock_symbol}")
 
-        # Load the trained model
-        print("Loading model...")
-        model = load_model('stock_prediction_model_with_tuned_hyperparameters.keras')
-
-        # Fetch stock data
+        # Fetch stock data - If you no longer need this, you can comment/remove this code.
         print("Fetching stock data...")
         df_test = get_stock_data(stock_symbol, '5y')
+        if df_test is None or df_test.empty:
+            raise ValueError(f"No data fetched for stock symbol: {stock_symbol}")
+
         print(f"Fetched data shape: {df_test.shape}")
 
         # Preprocess the test data
@@ -40,9 +44,7 @@ def get_predicted_prices(stock_symbol, prediction_days=[1, 15, 30]):
                 predicted_prices.append(predicted_price[0, 0])
 
                 # Update the input sequence for the next prediction
-                # Roll the input sequence to move it forward by 1 time step
                 input_sequence = np.roll(input_sequence, shift=-1, axis=0)
-                # Replace the last feature (last time step) with the predicted price
                 input_sequence[-1, 0] = predicted_price  # Replace the first feature with the predicted value
 
             return np.array(predicted_prices)  # Return the array of predicted prices for multiple days
@@ -65,7 +67,25 @@ def get_predicted_prices(stock_symbol, prediction_days=[1, 15, 30]):
 
             predictions[days] = predicted_stock_price.tolist()  # Convert NumPy array to list
 
-        # Return the predictions for 1, 15, and 30 days
+        # If download_csv is True, create the CSV file
+        if download_csv:
+            # Generate a DataFrame from the predictions
+            data = []
+            for days in prediction_days:
+                for price in predictions[days]:
+                    data.append({"Prediction": f"Next {days} Days", "Price": price})
+
+            df = pd.DataFrame(data)
+
+            # Create an in-memory CSV file
+            csv_file = io.BytesIO()
+            df.to_csv(csv_file, index=False)
+            csv_file.seek(0)  # Reset the pointer to the start of the file
+
+            # Return the CSV file (Flask will use this to send the file as download)
+            return csv_file  # Flask will send this file to the client for download
+
+        # If CSV is not requested, just return the predictions
         for days in prediction_days:
             print(f"Predicted price for next {days} day(s): {predictions[days][-1]}")
 

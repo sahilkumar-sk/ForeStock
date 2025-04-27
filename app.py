@@ -5,6 +5,7 @@ from keras.models import load_model  # Importing keras to load the model
 from test_model import get_predicted_prices  # Import the prediction function from test_model.py
 from fetch_news import fetch_news  # Import the function from fetch_news.py
 import requests
+import io
 import datetime
 from operator import itemgetter
 
@@ -87,16 +88,17 @@ def generate_predictions_csv(ticker, predictions_1_day, predictions_15_days, pre
     if not predictions_1_day or not predictions_15_days or not predictions_30_days:
         raise ValueError(f"No predictions available for ticker: {ticker}")
     
-    # Create a DataFrame with predictions
+    # Prepare the data for CSV
     data = {
         "Prediction": ["Next 1 Day"] + ["Next 15 Days"] * len(predictions_15_days) + ["Next 30 Days"] * len(predictions_30_days),
         "Price": [predictions_1_day[0]] + predictions_15_days + predictions_30_days
     }
     df = pd.DataFrame(data)
     
-    # Save the DataFrame to a CSV file
-    csv_file = f"{ticker}_predictions.csv"
+    # Create an in-memory file using BytesIO
+    csv_file = io.BytesIO()
     df.to_csv(csv_file, index=False)
+    csv_file.seek(0)  # Reset pointer to the start of the file
     
     return csv_file
 
@@ -117,34 +119,30 @@ def home():
 def predictions():
     if request.method == 'POST':
         ticker = request.form.get("ticker")  # Get ticker from form input
-        print(f"Ticker received: {ticker}")  # Debug print to check ticker
         if not ticker:
-            return render_template('predictions.html', ticker=None, predictions_1_day=None, predictions_15_days=None, predictions_30_days=None)
+            print("Error: No ticker provided")
+            return render_template('predictions.html', error="No ticker provided.")
+        print(f"Ticker received: {ticker}")  # Log the ticker value to verify        
+        try:
+            # Call the get_predicted_prices function and pass ticker
+            predictions = get_predicted_prices(ticker, prediction_days=[1, 15, 30], download_csv=True)
 
-        # Generate predictions for 1, 15, and 30 days using the imported function from test_model.py
-        predictions = get_predicted_prices(ticker, prediction_days=[1, 15, 30])
+            # If CSV is requested, return it
+            if isinstance(predictions, io.BytesIO):  # If the return value is the CSV file (in-memory)
+                return send_file(predictions, as_attachment=True, download_name=f"{ticker}_predictions.csv", mimetype="text/csv")
 
-        predictions_1_day = predictions.get(1, [])
-        predictions_15_days = predictions.get(15, [])
-        predictions_30_days = predictions.get(30, [])
-
-        # Handle CSV download button
-        if request.form.get("download_csv"):
-            print(f"Generating CSV for ticker: {ticker}")  # Debug print to check ticker again
-            # Generate CSV and send it as a downloadable file
-            csv_file = generate_predictions_csv(ticker, predictions_1_day, predictions_15_days, predictions_30_days)
-            return send_file(csv_file, as_attachment=True)
-
-        # Pass predictions to the template
-        return render_template(
-            'predictions.html',
-            ticker=ticker,
-            predictions_1_day=predictions_1_day,
-            predictions_15_days=predictions_15_days,
-            predictions_30_days=predictions_30_days
-        )
+            # If CSV is not requested, render the predictions
+            return render_template(
+                'predictions.html',
+                ticker=ticker,
+                predictions_1_day=predictions[1],
+                predictions_15_days=predictions[15],
+                predictions_30_days=predictions[30]
+            )
+        except Exception as e:
+            print(f"Error: {e}")
+            return render_template('predictions.html', error=f"Error generating predictions: {e}")
     else:
-        # Handle GET request (when the user clicks the "Predictions" link)
         return render_template('predictions.html', ticker=None, predictions_1_day=None, predictions_15_days=None, predictions_30_days=None)
 
 @app.route('/api/predict', methods=['POST'])

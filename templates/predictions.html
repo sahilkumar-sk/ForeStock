@@ -84,22 +84,18 @@
         </tbody>
     </table>
 
-        <!-- Download CSV Button -->
-        <form method="POST" action="/predictions">
-            <input type="hidden" name="ticker" value="{{ ticker }}">
-            <button type="submit" name="download_csv">Download CSV</button>
-        </form>
+<!-- Form to trigger predictions and download CSV -->
+<form method="POST" action="/predictions">
+    <input type="hidden" name="ticker" value="{{ ticker }}">  <!-- Ensure ticker is passed correctly -->
+    <button type="submit" name="download_csv">Download CSV</button>
+</form>
+        </div>      
+
         
     <!-- Chart Section -->
     <div id="prediction-chart">
         <canvas id="predictionChart"></canvas>
     </div>
-
-            <!-- Download CSV Button -->
-            <form method="POST" action="/predictions">
-                <input type="hidden" name="ticker" value="{{ ticker }}">
-                <button type="submit" name="download_csv">Download CSV</button>
-            </form>
 
     </section>
 
