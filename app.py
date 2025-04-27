@@ -4,9 +4,74 @@ from flask import Flask, render_template, jsonify, request, send_file
 from keras.models import load_model  # Importing keras to load the model
 from test_model import get_predicted_prices  # Import the prediction function from test_model.py
 from fetch_news import fetch_news  # Import the function from fetch_news.py
+import requests
+import datetime
 
 app = Flask(__name__)
 
+
+
+def fetch_stock_market_news(api_key):
+    today = datetime.datetime.now()
+    from_date = (today - datetime.timedelta(days=2)).strftime('%Y-%m-%d')
+    today_str = today.strftime('%Y-%m-%d')
+
+    url = f"https://newsapi.org/v2/everything?q=stock market&from={from_date}&to={today_str}&sortBy=publishedAt&language=en&pageSize=10&apiKey={api_key}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        news_data = response.json()
+    except Exception as e:
+        print(f"Failed to fetch news: {e}")
+        return []  # Fallback to empty list
+
+    articles = []
+    if news_data.get('status') == 'ok':
+        for article in news_data['articles']:
+            articles.append({
+                "title": article.get('title') or "Untitled",
+                "url": article.get('url') or "#",
+                "urlToImage": article.get('urlToImage')  # Keep it None if missing
+            })
+
+    return articles
+
+
+
+def remove_duplicates(articles):
+    seen = set()
+    unique_articles = []
+    for article in articles:
+        identifier = (article.get('title', '').strip(), article.get('url', '').strip())
+        if identifier not in seen:
+            seen.add(identifier)
+            unique_articles.append(article)
+    return unique_articles
+
+
+
+def get_trending_stocks():
+    trending_tickers = ["AAPL", "TSLA", "AMZN", "MSFT", "GOOGL"]  # You can customize this list
+    trending_stocks = []
+
+    for ticker in trending_tickers:
+        try:
+            stock = yf.Ticker(ticker)
+            hist = stock.history(period="2d")  # Last 2 days
+            if len(hist) >= 2:
+                yesterday_close = hist['Close'].iloc[-2]
+                today_close = hist['Close'].iloc[-1]
+                change_percent = ((today_close - yesterday_close) / yesterday_close) * 100
+                trending_stocks.append({
+                    "symbol": ticker,
+                    "price": f"${today_close:.2f}",
+                    "change_percent": change_percent
+                })
+        except Exception as e:
+            print(f"Error fetching data for {ticker}: {e}")
+
+    return trending_stocks
 # Load the model once when the app starts
 model = None
 try:
@@ -36,7 +101,16 @@ def generate_predictions_csv(ticker, predictions_1_day, predictions_15_days, pre
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Renders 'index.html'
+    trending_stocks = get_trending_stocks()
+
+    api_key = "6033221f384f4e4395d7410df82c3fdd"
+    articles = fetch_stock_market_news(api_key)
+    articles = remove_duplicates(articles)
+
+    print(f"Total articles fetched: {len(articles)}")  # Safe debug
+
+    return render_template('index.html', trending_stocks=trending_stocks, articles=articles)
+
 
 @app.route('/predictions', methods=['GET', 'POST'])
 def predictions():
@@ -109,6 +183,7 @@ def news():
 
     # Fetch news articles
     articles = fetch_news(stock_symbol, api_key)
+    articles = remove_duplicates(articles)
 
     # Pass articles to the template
     return render_template('news.html', articles=articles)

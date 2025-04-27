@@ -5,139 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Stock Price Forecaster</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index_styles.css') }}">
-    <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
+
 <body id="body">
 
-    <!-- Navigation Bar -->
-    <header>
-        <nav><img src="{{ url_for('static', filename='images/ForeStock.jpg') }}" alt="Logo" class="logo">
-            
-            <ul class="navbar">
-                <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('predictions') }}">Predictions</a></li>
-                <li><a href="{{ url_for('news') }}">News</a></li>
-                <li><a href="{{ url_for('trends') }}">Trends</a></li>
-            </ul>
-            <div class="search-container">
-                <input type="text" id="stock-search" placeholder="Search for trends or stocks...">
-                <button type="button" id="search-button"><i class="fas fa-search"></i> Search</button>
-            </div>
-            <!-- Icons on the right -->
-            <div class="nav-icons">
-                <a href="#" class="icon" id="notification-icon"><i class="fas fa-bell"></i></a>
-                <a href="#" class="icon" id="mode-icon"><i class="fas fa-moon"></i></a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Notifications Tab -->
-    <section id="notifications-tab" class="notifications-tab">
-        <div class="notifications-content">
-            <h3>Notifications</h3>
-            <ul>
-                <li>Stock Market Hits Record Highs</li>
-                <li>Tech Stocks Lead the Way</li>
-                <li>Fed Signals Interest Rate Changes</li>
-                <li>New IPOs Spark Investor Interest</li>
-            </ul>
+<header>
+    <nav>
+        <img src="{{ url_for('static', filename='images/ForeStock.jpg') }}" alt="Logo" class="logo">
+        <ul class="navbar">
+            <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
+            <li><a href="{{ url_for('predictions') }}">Predictions</a></li>
+            <li><a href="{{ url_for('news') }}">News</a></li>
+            <li><a href="{{ url_for('trends') }}">Trends</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="stock-search" placeholder="Search for trends or stocks...">
+            <button type="button" id="search-button"><i class="fas fa-search"></i> Search</button>
         </div>
-    </section>
+        <div class="nav-icons">
+            <a href="#" class="icon" id="notification-icon"><i class="fas fa-bell"></i></a>
+            <a href="#" class="icon" id="mode-icon"><i class="fas fa-moon"></i></a>
+        </div>
+    </nav>
+</header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Trending Stocks Section -->
-        <section class="trending-stocks">
-            <h2>Top 5 Trending Stocks</h2>
-            <div class="stocks-container">
-                <div class="stock-card">
-                    <h3>Stock 1</h3>
-                    <p class="price">$123.45</p>
-                    <p class="change positive">+2.5% today</p>
-                </div>
-                <div class="stock-card">
-                    <h3>Stock 2</h3>
-                    <p class="price">$98.67</p>
-                    <p class="change negative">-1.8% today</p>
-                </div>
-                <div class="stock-card">
-                    <h3>Stock 3</h3>
-                    <p class="price">$210.34</p>
-                    <p class="change positive">+3.1% today</p>
-                </div>
-                <div class="stock-card">
-                    <h3>Stock 4</h3>
-                    <p class="price">$56.72</p>
-                    <p class="change negative">-0.7% today</p>
-                </div>
-                <button class="see-more" onclick="window.location.href='trends.html';">
-                    See More
-                </button>
-            </div>
-        </section>
-
-        <!-- Latest News Section -->
-        <section class="latest-news">
-            <h2>Latest Stock News</h2>
-            <div class="news-container">
-                <div class="news-card" style="background-image: url('OIP.jpeg');">
-                    <h3>Stock Market Hits Record Highs</h3>
-                    <a href="#" class="see-details">See Details</a>
-                </div>
-                <div class="news-card" style="background-image: url('OIP1.jpeg');">
-                    <h3>Tech Stocks Lead the Way</h3>
-                    <a href="#" class="see-details">See Details</a>
-                </div>
-                <div class="news-card" style="background-image: url('OIP2.jpeg');">
-                    <h3>Fed Signals Interest Rate Changes</h3>
-                    <a href="#" class="see-details">See Details</a>
-                </div>
-                <div class="news-card" style="background-image: url('OIP3.jpeg');">
-                    <h3>New IPOs Spark Investor Interest</h3>
-                    <a href="#" class="see-details">See Details</a>
-                </div>
-                <button class="see-more" onclick="window.location.href='news.html';">
-                    See More
-                </button>
-            </div>
-        </section>
-    </main>
-
-        <!-- Footer Section -->
-    <footer>
-        <div class="footer-content">
-            <!-- About Us Section -->
-            <div class="footer-item">
-                <h3>About Us</h3>
-                <p>ForeStock is a predictive platform that combines stock forecasting with sentiment analysis to provide real-time insights on the stock market.</p>
-            </div>
-
-            <!-- Contact Us Section -->
-            <div class="footer-item">
-                <h3>Contact Us</h3>
-                <ul class="contact-links">
-                    <li>Email: <a href="mailto:contact@forestock.com">contact@forestock.com</a></li>
-                    <li>Phone: +1 234 567 890</li>
-                    <li>Address: 123 Stock St., New York, NY</li>
-                </ul>
-            </div>
-
-        <!-- Follow Us Section -->
-    <div class="footer-item">
-        <h3>Follow Us</h3>
-        <ul class="social-links">
-            <li><a href="https://facebook.com/ForeStock" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-            <li><a href="https://twitter.com/ForeStock" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-            <li><a href="https://linkedin.com/company/ForeStock" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-            <li><a href="https://instagram.com/ForeStock" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+<section id="notifications-tab" class="notifications-tab">
+    <div class="notifications-content">
+        <h3>Notifications</h3>
+        <ul>
+            <li>Stock Market Hits Record Highs</li>
+            <li>Tech Stocks Lead the Way</li>
+            <li>Fed Signals Interest Rate Changes</li>
+            <li>New IPOs Spark Investor Interest</li>
         </ul>
     </div>
+</section>
 
+<main>
+
+<section class="latest-news">
+    <h2>Latest Stock Market News</h2>
+
+    <div class="news-carousel">
+        <button class="news-arrow left-arrow" id="prevSlide">&#10094;</button>
+
+        {% if articles %}
+            {% for article in articles %}
+                <div class="news-slide" style="background-image: url('{{ article.urlToImage if article.urlToImage else url_for('static', filename='images/default_news.jpg') }}');">
+                    <div class="slide-content">
+                        <h3>{{ article.title }}</h3>
+                        <a href="{{ article.url }}" target="_blank" class="see-details">See Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="news-slide" style="background-color: #eee;">
+                <div class="slide-content">
+                    <h3>No News Available</h3>
+                </div>
+            </div>
+        {% endif %}
+
+        <button class="news-arrow right-arrow" id="nextSlide">&#10095;</button>
+        <div class="slide-counter" id="slideCounter">1 / 5</div>
+    </div>
+</section>
+
+<section class="trending-stocks">
+    <h2>Top 5 Trending Stocks</h2>
+    <div class="stocks-container">
+        {% for stock in trending_stocks %}
+            <div class="stock-card">
+                <h3>{{ stock.symbol }}</h3>
+                <p class="price">{{ stock.price }}</p>
+                {% if stock.change_percent >= 0 %}
+                    <p class="change positive">+{{ stock.change_percent | round(2) }}% today</p>
+                {% else %}
+                    <p class="change negative">{{ stock.change_percent | round(2) }}% today</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button class="see-more" onclick="window.location.href='{{ url_for('trends') }}';">See More</button>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-item">
+            <h3>About Us</h3>
+            <p>ForeStock is a predictive platform that combines stock forecasting with sentiment analysis to provide real-time insights on the stock market.</p>
         </div>
-    </footer>
 
+        <div class="footer-item">
+            <h3>Contact Us</h3>
+            <ul class="contact-links">
+                <li>Email: <a href="mailto:contact@forestock.com">contact@forestock.com</a></li>
+                <li>Phone: +1 234 567 890</li>
+                <li>Address: 123 Stock St., New York, NY</li>
+            </ul>
+        </div>
 
-    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+        <div class="footer-item">
+            <h3>Follow Us</h3>
+            <ul class="social-links">
+                <li><a href="https://facebook.com/ForeStock" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                <li><a href="https://twitter.com/ForeStock" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+                <li><a href="https://linkedin.com/company/ForeStock" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                <li><a href="https://instagram.com/ForeStock" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+
 </body>
 </html>
