@@ -84,7 +84,7 @@
                             {% if article.urlToImage %}
                                 <img src="{{ article.urlToImage }}" alt="News Image" class="news-image">
                             {% else %}
-                                <img src="{{ url_for('static', filename='images/default-news.jpg') }}" alt="Default News Image" class="news-image">
+                                <img src="{{ url_for('static', filename='images/default_news.jpg') }}" alt="Default News Image" class="news-image">
                             {% endif %}
                             <h3 class="news-title">{{ article.title }}</h3>
                             <p class="news-description">{{ article.description }}</p>

@@ -18,7 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('future-1-day').textContent = '-';
             document.getElementById('future-15-days').textContent = '-';
             document.getElementById('future-30-days').textContent = '-';
+            
+            // Also hide current and prediction prices
+            currentPrice.style.display = 'none';
+            predictionPrice.style.display = 'none';
         }
+        
 
         function showLoading() {
             loadingSpinner.style.display = 'block';
@@ -68,8 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 tickerResult.textContent = stockTicker.toUpperCase();
-                predictionPrice.textContent = `$${data[1][0].toFixed(2)}`;
-                currentPrice.textContent = `Current Price: $${data.current_price}`;
+                currentPrice.innerHTML = `<strong>Current Price:</strong> $${data.current_price}`;
+                predictionPrice.innerHTML = `<strong>Predicted Price:</strong> $${data[1][0].toFixed(2)}`;
+                
 
                 document.getElementById('future-1-day').textContent = `$${data[1][0].toFixed(2)}`;
                 document.getElementById('future-15-days').textContent = data[15].map(price => `$${price.toFixed(2)}`).join(', ');
