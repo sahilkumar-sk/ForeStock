@@ -6,6 +6,7 @@ from test_model import get_predicted_prices  # Import the prediction function fr
 from fetch_news import fetch_news  # Import the function from fetch_news.py
 import requests
 import datetime
+from operator import itemgetter
 
 app = Flask(__name__)
 
@@ -177,13 +178,15 @@ def predict_api():
 
 @app.route('/news')
 def news():
-    # Replace with your actual API key
-    api_key = "6033221f384f4e4395d7410df82c3fdd"
+    api_key = "6033221f384f4e4395d7410df82c3fdd"  # Replace with your actual API key
     stock_symbol = request.args.get('stock', 'stock market')  # Default to "stock market" if no stock is specified
-
+    
     # Fetch news articles
     articles = fetch_news(stock_symbol, api_key)
     articles = remove_duplicates(articles)
+
+    # Sort articles by published date (assuming 'publishedAt' is in the article data)
+    articles = sorted(articles, key=itemgetter('publishedAt'), reverse=True)  # Sorting in descending order
 
     # Pass articles to the template
     return render_template('news.html', articles=articles)
