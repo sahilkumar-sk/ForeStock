@@ -226,7 +226,11 @@ body.dark-mode .prediction-section {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-
+body.dark-mode #stock-ticker {
+    background-color: #555; /* Dark background for the input field */
+    color: #fff;
+    border: 1px solid #777;
+}
 #predict-button {
     padding: 10px 20px;
     background-color: #1F8A70;
@@ -382,7 +386,7 @@ footer {
 
 /* Dark Mode for Prediction Section */
 body.dark-mode .prediction-section {
-    background-color: #333; /* Dark background for prediction section */
+    background-color: #2b2b2b; /* Dark background for prediction section */
 }
 
 body.dark-mode .prediction-section p {
@@ -391,7 +395,7 @@ body.dark-mode .prediction-section p {
 
 /* Dark Mode for Prediction Table */
 body.dark-mode #prediction-table th {
-    background-color: #007B59;
+    background-color: #1F8A70;
 }
 
 body.dark-mode #prediction-table td {
@@ -400,5 +404,5 @@ body.dark-mode #prediction-table td {
 }
 
 body.dark-mode #prediction-price {
-    color: #00ff99;
+    color: #38eea5;
 }
