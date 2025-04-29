@@ -10,7 +10,7 @@ body {
 }
 
 body.dark-mode {
-    background-color: #333;
+    background-color: #2b2b2b;
     color: #fff;
 }
 
@@ -24,6 +24,10 @@ header {
     width: 100%;
     z-index: 1000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+body.dark-mode header {
+    background-color: #2e2e2e;
+    color: #fff;
 }
 header .logo {
     max-height: 75px; /* Adjust as needed */
@@ -48,7 +52,7 @@ nav {
 }
 
 .navbar a {
-    color: #007B59;
+    color: #1F8A70;
     text-decoration: none;
     font-size: 18px;
     padding: 10px 15px;
@@ -57,12 +61,12 @@ nav {
 }
 
 .navbar a:hover {
-    background-color: #007B59;
+    background-color: #1F8A70;
     color: #fff;
 }
 
 .navbar .active {
-    background-color: #007B59;
+    background-color: #1F8A70;
     color: #fff;
 }
 
@@ -86,15 +90,16 @@ nav {
 /* Notifications Tab */
 .notifications-tab {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 60px;
     right: 20px;
     background-color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 15px;
     width: 250px;
     border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Stronger, smoother shadow */
     z-index: 1000;
+    transition: all 0.3s ease; /* (Optional) smooth open/close effect */
 }
 
 .notifications-tab.show-notifications {
@@ -183,7 +188,7 @@ body.dark-mode .search-section {
 
 body.dark-mode #stock-search {
     background-color: #555; /* Dark background for the input field */
-    color: white;
+    color: #fff;
     border: 1px solid #777;
 }
 

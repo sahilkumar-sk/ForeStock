@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/predictions_styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
+<body id="body">
 
     <!-- Navigation Bar -->
     <header>
         <nav>
-            <img src="{{ url_for('static', filename='images/ForeStock.jpg') }}" alt="Logo" class="logo">
+            <img src="{{ url_for('static', filename='images/ForeStock.png') }}" alt="Logo" class="logo">
             <ul class="navbar">
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('predictions') }}" class="active">Predictions</a></li>
@@ -32,7 +32,18 @@
     </header>
 
 
-
+    <!-- Notifications Tab -->
+    <div class="notifications-tab" id="notifications-tab">
+        <div class="notifications-content">
+            <h3>Notifications</h3>
+            <ul>
+                <li>Stock Market Hits Record Highs!</li>
+                <li>Tech Stocks Lead the Way!</li>
+                <li>Fed Signals Interest Rate Changes</li>
+                <li>New IPOs Spark Investor Interest</li>
+            </ul>
+        </div>
+    </div>
 
 
     <!-- Prediction Section -->

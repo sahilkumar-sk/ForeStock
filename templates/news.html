@@ -8,12 +8,12 @@
     <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
+<body id="body">
 
     <!-- Navigation Bar -->
     <header>
         <nav>
-            <img src="{{ url_for('static', filename='images/ForeStock.jpg') }}" alt="Logo" class="logo">
+            <img src="{{ url_for('static', filename='images/ForeStock.png') }}" alt="Logo" class="logo">
             <ul class="navbar">
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('predictions') }}">Predictions</a></li>

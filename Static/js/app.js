@@ -124,54 +124,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-// ========================
-// News Carousel Script
-// ========================
-const slides = document.querySelectorAll('.news-slide');
-let currentIndex = 0;
-const slideCounter = document.getElementById('slideCounter');
+    // ========================
+    // News Carousel Script
+    // ========================
+    const slides = document.querySelectorAll('.news-slide');
+    let currentIndex = 0;
+    const slideCounter = document.getElementById('slideCounter');
 
-function updateCounter() {
-    if (slideCounter) {
-        slideCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
-    }
-}
-
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        if (i === index) {
-            slide.classList.add('active');
-        } else {
-            slide.classList.remove('active');
+    function updateCounter() {
+        if (slideCounter) {
+            slideCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
         }
-    });
-}
-
-
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
-    updateCounter();
-}
-
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    showSlide(currentIndex);
-    updateCounter();
-}
-
-if (slides.length > 0) {
-    showSlide(currentIndex);
-    updateCounter();
-
-    setInterval(nextSlide, 4000); // ✅ Start interval only once, not inside showSlide()
-
-    const nextButton = document.getElementById('nextSlide');
-    const prevButton = document.getElementById('prevSlide');
-
-    if (nextButton && prevButton) {
-        nextButton.addEventListener('click', nextSlide);
-        prevButton.addEventListener('click', prevSlide);
     }
-}
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            if (i === index) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
+        updateCounter();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+        updateCounter();
+    }
+
+    if (slides.length > 0) {
+        showSlide(currentIndex);
+        updateCounter();
+
+        setInterval(nextSlide, 4000); // ✅ Start interval only once, not inside showSlide()
+
+        const nextButton = document.getElementById('nextSlide');
+        const prevButton = document.getElementById('prevSlide');
+
+        if (nextButton && prevButton) {
+            nextButton.addEventListener('click', nextSlide);
+            prevButton.addEventListener('click', prevSlide);
+        }
+    }
+
+    // ========================
+    // Notification and Mode Toggle
+    // ========================
+    const notificationIcon = document.getElementById('notification-icon');
+    const notificationsTab = document.getElementById('notifications-tab');
+    const modeIcon = document.getElementById('mode-icon');
+    const body = document.getElementById('body');
+
+    // Apply dark mode based on stored preference
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        body.classList.add('dark-mode');  // Apply dark mode if saved
+        // modeIcon.querySelector('i').classList.remove('fa-moon');
+        // modeIcon.querySelector('i').classList.add('fa-sun');
+    }
+
+    // Notifications toggle
+    if (notificationIcon && notificationsTab) {
+        notificationIcon.addEventListener('click', function(event) {
+            event.preventDefault();
+            notificationsTab.classList.toggle('show-notifications');  // Toggle visibility of notifications tab
+        });
+    }
+
+    // Dark Mode toggle
+    if (modeIcon && body) {
+        modeIcon.addEventListener('click', function(event) {
+            event.preventDefault();
+            body.classList.toggle('dark-mode');  // Toggle dark mode class
+
+            // Save dark mode preference to localStorage
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');  // Save dark mode enabled
+                // modeIcon.querySelector('i').classList.remove('fa-moon');
+                // modeIcon.querySelector('i').classList.add('fa-sun');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');  // Save dark mode disabled
+                // modeIcon.querySelector('i').classList.remove('fa-sun');
+                // modeIcon.querySelector('i').classList.add('fa-moon');
+            }
+        });
+    }
 });
