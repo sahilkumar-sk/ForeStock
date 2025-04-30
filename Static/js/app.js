@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-//stock-ticker section added at home page
+//stock-ticker section added at home
 document.addEventListener("DOMContentLoaded", function () {
     const stockTickerText = document.getElementById("stock-ticker-text");
 
