@@ -9,6 +9,8 @@ import io
 import datetime
 from operator import itemgetter
 
+from operator import itemgetter
+
 app = Flask(__name__)
 
 
@@ -174,6 +176,7 @@ def predict_api():
             print(f"Error fetching data for {ticker}: {e}")
             return jsonify({'error': f'An error occurred while fetching data for {ticker}.'}), 500
 
+
 @app.route('/news')
 def news():
     api_key = "6033221f384f4e4395d7410df82c3fdd"  # Replace with your actual API key
@@ -181,7 +184,12 @@ def news():
     
     # Fetch news articles
     articles = fetch_news(stock_symbol, api_key)
+
+    # Remove duplicate articles
     articles = remove_duplicates(articles)
+
+    # Filter out articles without a description
+    articles = [article for article in articles if article.get('description')]
 
     # Sort articles by published date (assuming 'publishedAt' is in the article data)
     articles = sorted(articles, key=itemgetter('publishedAt'), reverse=True)  # Sorting in descending order
