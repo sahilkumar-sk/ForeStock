@@ -181,6 +181,11 @@ def news():
     
     # Fetch news articles
     articles = fetch_news(stock_symbol, api_key)
+
+    # Remove articles with no description
+    articles = [article for article in articles if article.get('description')]
+
+    # Remove duplicates
     articles = remove_duplicates(articles)
 
     # Sort articles by published date (assuming 'publishedAt' is in the article data)
@@ -188,6 +193,7 @@ def news():
 
     # Pass articles to the template
     return render_template('news.html', articles=articles)
+
 
 @app.route('/trends')
 def trends():
