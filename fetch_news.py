@@ -7,7 +7,7 @@ from requests.packages.urllib3.util.retry import Retry
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# Fetch news data from NewsAPI with retries
+# Fetch news data from NewsAPI with retries and filter out articles with no description
 def fetch_news(stock_symbol, api_key):
     url = f"https://newsapi.org/v2/everything?q={stock_symbol}&apiKey={api_key}"
     session = requests.Session()
@@ -19,7 +19,16 @@ def fetch_news(stock_symbol, api_key):
         articles = response.json().get('articles', [])
         if not articles:
             logging.warning(f"No articles found for {stock_symbol}.")
-        return articles
+        
+        # Filter out articles that do not have a description
+        articles_with_description = [
+            article for article in articles if article.get('description')
+        ]
+
+        if not articles_with_description:
+            logging.warning(f"No articles with description found for {stock_symbol}.")
+        
+        return articles_with_description
     except requests.exceptions.RequestException as e:
         logging.error(f"Error fetching news for {stock_symbol}: {e}")
         return []
