@@ -10,6 +10,13 @@
 
 <body id="body">
 
+<!-- Stock Ticker Section - Place this directly after the header -->
+<section id="stock-ticker">
+    <div id="stock-ticker-container">
+        <span id="stock-ticker-text"></span>
+    </div>
+</section>
+
 <header>
     <nav>
         <img src="{{ url_for('static', filename='images/ForeStock.png') }}" alt="Logo" class="logo">
@@ -68,7 +75,6 @@
         {% endif %}
 
         <button class="news-arrow right-arrow" id="nextSlide">&#10095;</button>
-        <!-- <div class="slide-counter" id="slideCounter">1 / 5</div> -->
     </div>
 </section>
 

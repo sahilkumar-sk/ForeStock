@@ -1,3 +1,41 @@
+/* Stock Ticker Styles */
+#stock-ticker {
+    background-color: #1F8A70; /* Green background */
+    color: white;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative; /* Changed from 'fixed' to 'relative' */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    /* margin-top: 2px; Added margin to create space below the header */
+}
+
+#stock-ticker-container {
+    white-space: nowrap;
+    display: flex;
+    animation: ticker 30s linear infinite;
+}
+
+#stock-ticker-text {
+    padding: 0 20px;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 /* ===================================
   Global Styles
 =================================== */

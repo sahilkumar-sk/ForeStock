@@ -216,3 +216,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+//stock-ticker section added at home page
+document.addEventListener("DOMContentLoaded", function () {
+    const stockTickerText = document.getElementById("stock-ticker-text");
+
+    // Sample stock data - You can replace this with dynamic data
+    const stocks = [
+        { symbol: "KSE 100", price: 6.95, change: -0.72 },
+        { symbol: "ENERGY", price: 9.15, change: -0.36 },
+        { symbol: "BOP", price: 3.98, change: -0.12 },
+        { symbol: "KEL", price: 7.50, change: 0.35 },
+    ];
+
+    // Function to update the ticker text
+    function updateTicker() {
+        let tickerContent = "";
+        stocks.forEach(stock => {
+            tickerContent += `${stock.symbol}: $${stock.price} ${stock.change >= 0 ? '+' : ''}${stock.change} | `;
+        });
+        stockTickerText.textContent = tickerContent;
+    }
+
+    updateTicker();
+
+    // Optionally, you can set a timer to refresh the stock prices every 10 seconds or so.
+    setInterval(updateTicker, 10000);
+});
