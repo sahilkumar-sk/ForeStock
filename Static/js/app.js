@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner    = document.getElementById('loading-spinner');
     let   predictionChart;
 
-    // helper to skip weekends
     function getNextBusinessDay(date) {
         const d = new Date(date);
         do {
@@ -24,13 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
             tickerResult.textContent      = '-';
             predictionPrice.textContent   = '-';
             currentPrice.textContent      = 'Current Price: $-';
-            // clear any old 30-day rows
             const tbody = document.getElementById('prediction-table-body');
             if (tbody) tbody.innerHTML = '';
-            // reset the download form ticker
             const downloadInput = document.getElementById('download-ticker');
             if (downloadInput) downloadInput.value = '';
-            // hide current and prediction prices
             currentPrice.style.display    = 'none';
             predictionPrice.style.display = 'none';
         }
@@ -49,6 +45,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function destroyChart() {
             if (predictionChart) predictionChart.destroy();
+        }
+
+        function renderChart(chartDataArray) {
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            const darkModeActive = document.body.classList.contains('dark-mode');
+
+            const chartData = {
+                labels: chartDataArray.map((_, i) => `Day ${i + 1}`),
+                datasets: [{
+                    label: 'Predicted Stock Price',
+                    data: chartDataArray,
+                    borderColor: '#1F8A70',
+                    backgroundColor: 'rgba(31, 138, 112, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top', labels: { color: darkModeActive ? '#fff' : '#333' }},
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { 
+                        ticks: { color: darkModeActive ? '#fff' : '#333' },
+                        grid: { color: darkModeActive ? '#555' : '#ddd' }
+                    },
+                    y: { 
+                        ticks: { color: darkModeActive ? '#fff' : '#333' },
+                        grid: { color: darkModeActive ? '#555' : '#ddd' }
+                    }
+                }
+            };
+
+            destroyChart();
+
+            predictionChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: chartOptions
+            });
         }
 
         predictionForm.addEventListener('submit', async (event) => {
@@ -74,77 +113,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
 
-                // display header info
                 const symbol = stockTicker.toUpperCase();
                 tickerResult.textContent      = symbol;
                 currentPrice.innerHTML        = `<strong>Current Price:</strong> $${data.current_price}`;
                 predictionPrice.innerHTML     = `<strong>Predicted Price:</strong> $${data[1][0].toFixed(2)}`;
 
-                // populate the download form ticker
                 const downloadInput = document.getElementById('download-ticker');
                 if (downloadInput) downloadInput.value = symbol;
 
-                // --- build 30-day business-day table ---
                 const tbody = document.getElementById('prediction-table-body');
                 tbody.innerHTML = '';
                 let datePointer = new Date();
 
                 data[30].forEach(price => {
                     datePointer = getNextBusinessDay(datePointer);
-
                     const tr      = document.createElement('tr');
                     const tdDate  = document.createElement('td');
                     const tdPrice = document.createElement('td');
-
                     tdDate.textContent  = datePointer.toLocaleDateString();
                     tdPrice.textContent = `$${price.toFixed(2)}`;
-
                     tr.appendChild(tdDate);
                     tr.appendChild(tdPrice);
                     tbody.appendChild(tr);
                 });
-                // --- end table ---
 
-                // render chart
-                destroyChart();
-                const ctx = document.getElementById('predictionChart').getContext('2d');
-                // Check if dark mode is enabled
-                const isDarkMode = document.body.classList.contains('dark-mode');       
-                const chartData = {
-                    labels: data[30].map((_, i) => `Day ${i + 1}`),
-                    datasets: [{
-                        label: 'Predicted Stock Price',
-                        data: data[30],
-                        borderColor: '#1F8A70',
-                        backgroundColor: 'rgba(31, 138, 112, 0.2)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                };
-                const chartOptions = {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'top' },
-                        labels: {color: isDarkMode ? '#fff' : '#333'},
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: {
-                        x: { 
-                            ticks: { color: isDarkMode ? '#fff' : '#333' },
-                            grid: { color: isDarkMode ? '#444' : '#ddd' }
-                        },
-                        y: { 
-                            ticks: { color: isDarkMode ? '#fff' : '#333' },
-                            grid: { color: isDarkMode ? '#444' : '#ddd' }
-                        }
-                    }
-                };
-                predictionChart = new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
-                    options: chartOptions
-                });
-
+                renderChart(data[30]);
                 document.getElementById('prediction-results').classList.add('active');
             } catch (error) {
                 console.error('Error fetching prediction:', error);
@@ -201,12 +194,18 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         notificationsTab.classList.toggle('show-notifications');
     });
+
     modeIcon?.addEventListener('click', e => {
         e.preventDefault();
         body.classList.toggle('dark-mode');
         localStorage.setItem('darkMode',
             body.classList.contains('dark-mode') ? 'enabled' : 'disabled'
         );
+
+        // Also re-render chart if needed
+        if (predictionChart && predictionChart.data) {
+            renderChart(predictionChart.data.datasets[0].data);
+        }
     });
 
     // ========================
@@ -224,7 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
         stocks.forEach(s => {
             text += `${s.symbol}: $${s.price} ${s.change >= 0 ? '+' : ''}${s.change} | `;
         });
-        stockTickerText.textContent = text;
+        if (stockTickerText) {
+            stockTickerText.textContent = text;
+        }
     }
     updateTicker();
     setInterval(updateTicker, 10000);
