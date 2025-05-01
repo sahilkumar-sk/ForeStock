@@ -44,57 +44,57 @@
     </div>
 
     <!-- Prediction Section -->
-    <section class="prediction-section">
-        <div class="prediction-container">
-            <h2>Stock Price Predictions</h2>
-            <p>Enter a stock ticker to predict its price movement.</p>
-            <form id="prediction-form">
-                <input type="text" id="stock-ticker" placeholder="Enter Stock Ticker (e.g., AAPL)" required>
-                <button type="submit" id="predict-button"><i class="fas fa-play"></i> Predict</button>
-            </form>
+    <!-- Prediction Results and Chart Container -->
+<section class="prediction-section">
+    <div class="prediction-container">
+        <h2>Stock Price Predictions</h2>
+        <p>Enter a stock ticker to predict its price movement.</p>
+        <form id="prediction-form">
+            <input type="text" id="stock-ticker" placeholder="Enter Stock Ticker (e.g., AAPL)" required>
+            <button type="submit" id="predict-button"><i class="fas fa-play"></i> Predict</button>
+        </form>
+    </div>
+
+    <div id="prediction-results" class="results-container">
+        <h3>Predicted Price for <span id="ticker-result">-</span></h3>
+        <div id="loading-spinner" class="loading-spinner" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> <span class="loading">Loading...</span>
         </div>
 
-        <!-- Prediction Results Section -->
-        <div id="prediction-results" class="results-container">
-            <h3>Predicted Price for <span id="ticker-result">-</span></h3>
+        <p id="current-price"><strong>Current Price:</strong> $-</p>
+        <p id="prediction-price"><strong>Predicted Price:</strong> $-</p>
 
-            <div id="loading-spinner" class="loading-spinner" style="display: none;">
-                <i class="fas fa-spinner fa-spin"></i> <span class="loading">Loading...</span>
+        <div class="results-chart-container">
+            <!-- Prediction Table -->
+            <div class="table-container">
+                <h4>Future Predictions</h4>
+                <table id="prediction-table" class="prediction-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Predicted Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prediction-table-body">
+                        <!-- JS will inject rows here -->
+                    </tbody>
+                </table>
             </div>
 
-            <p id="current-price"><strong>Current Price:</strong> $-</p>
-            <p id="prediction-price"><strong>Predicted Price:</strong> $-</p>
-
-            <h4>Future Predictions</h4>
-            <table id="prediction-table" class="prediction-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Predicted Price</th>
-                    </tr>
-                </thead>
-                <tbody id="prediction-table-body">
-                    <!-- JS will inject 30 rows here -->
-                </tbody>
-            </table>
-
-            <!-- Download CSV Form -->
-            <form method="POST" action="/predictions">
-                <input 
-                    type="hidden" 
-                    name="ticker" 
-                    id="download-ticker" 
-                    value="{{ ticker or '' }}"
-                >
-                <button type="submit" name="download_csv">Download CSV</button>
-            </form>
+            <!-- Chart Section -->
+            <div class="chart-container">
+                <canvas id="predictionChart"></canvas>
+            </div>
         </div>
 
-        <!-- Chart Section -->
-        <div id="prediction-chart">
-            <canvas id="predictionChart"></canvas>
-        </div>
-    </section>
+        <!-- Download CSV Form -->
+        <form method="POST" action="/predictions">
+            <input type="hidden" name="ticker" id="download-ticker" value="{{ ticker or '' }}">
+            <button type="submit" name="download_csv" class="download-btn">Download CSV</button>
+        </form>
+    </div>
+</section>
+
 
     <!-- Footer Section -->
     <footer>
