@@ -108,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // render chart
                 destroyChart();
                 const ctx = document.getElementById('predictionChart').getContext('2d');
+                // Check if dark mode is enabled
+                const isDarkMode = document.body.classList.contains('dark-mode');       
                 const chartData = {
                     labels: data[30].map((_, i) => `Day ${i + 1}`),
                     datasets: [{
@@ -123,11 +125,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     responsive: true,
                     plugins: {
                         legend: { position: 'top' },
+                        labels: {color: isDarkMode ? '#fff' : '#333'},
                         tooltip: { mode: 'index', intersect: false }
                     },
                     scales: {
-                        x: { ticks: { color: '#333' } },
-                        y: { ticks: { color: '#333' } }
+                        x: { 
+                            ticks: { color: isDarkMode ? '#fff' : '#333' },
+                            grid: { color: isDarkMode ? '#444' : '#ddd' }
+                        },
+                        y: { 
+                            ticks: { color: isDarkMode ? '#fff' : '#333' },
+                            grid: { color: isDarkMode ? '#444' : '#ddd' }
+                        }
                     }
                 };
                 predictionChart = new Chart(ctx, {
