@@ -2,45 +2,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // =======================
     // Prediction Form Script
     // =======================
-    const predictionForm = document.getElementById('prediction-form');
-    const stockTickerInput = document.getElementById('stock-ticker');
-    const tickerResult = document.getElementById('ticker-result');
-    const predictionPrice = document.getElementById('prediction-price');
-    const currentPrice = document.getElementById('current-price');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    let predictionChart;
+    const predictionForm    = document.getElementById('prediction-form');
+    const stockTickerInput  = document.getElementById('stock-ticker');
+    const tickerResult      = document.getElementById('ticker-result');
+    const predictionPrice   = document.getElementById('prediction-price');
+    const currentPrice      = document.getElementById('current-price');
+    const loadingSpinner    = document.getElementById('loading-spinner');
+    let   predictionChart;
+
+    // helper to skip weekends
+    function getNextBusinessDay(date) {
+        const d = new Date(date);
+        do {
+            d.setDate(d.getDate() + 1);
+        } while (d.getDay() === 0 || d.getDay() === 6);
+        return d;
+    }
 
     if (predictionForm) {
         function clearResults() {
-            tickerResult.textContent = '-';
-            predictionPrice.textContent = '-';
-            currentPrice.textContent = 'Current Price: $-';
-            document.getElementById('future-1-day').textContent = '-';
-            document.getElementById('future-15-days').textContent = '-';
-            document.getElementById('future-30-days').textContent = '-';
-            
-            // Also hide current and prediction prices
-            currentPrice.style.display = 'none';
+            tickerResult.textContent      = '-';
+            predictionPrice.textContent   = '-';
+            currentPrice.textContent      = 'Current Price: $-';
+            // clear any old 30-day rows
+            const tbody = document.getElementById('prediction-table-body');
+            if (tbody) tbody.innerHTML = '';
+            // reset the download form ticker
+            const downloadInput = document.getElementById('download-ticker');
+            if (downloadInput) downloadInput.value = '';
+            // hide current and prediction prices
+            currentPrice.style.display    = 'none';
             predictionPrice.style.display = 'none';
         }
-        
 
         function showLoading() {
-            loadingSpinner.style.display = 'block';
-            document.getElementById('current-price').style.display = 'none';
-            document.getElementById('prediction-price').style.display = 'none';
+            loadingSpinner.style.display   = 'block';
+            currentPrice.style.display     = 'none';
+            predictionPrice.style.display  = 'none';
         }
 
         function hideLoading() {
-            loadingSpinner.style.display = 'none';
-            document.getElementById('current-price').style.display = 'block';
-            document.getElementById('prediction-price').style.display = 'block';
+            loadingSpinner.style.display   = 'none';
+            currentPrice.style.display     = 'block';
+            predictionPrice.style.display  = 'block';
         }
 
         function destroyChart() {
-            if (predictionChart) {
-                predictionChart.destroy();
-            }
+            if (predictionChart) predictionChart.destroy();
         }
 
         predictionForm.addEventListener('submit', async (event) => {
@@ -62,30 +70,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ ticker: stockTicker })
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch prediction data');
-                }
-
+                if (!response.ok) throw new Error('Failed to fetch prediction data');
                 const data = await response.json();
+                if (data.error) throw new Error(data.error);
 
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+                // display header info
+                const symbol = stockTicker.toUpperCase();
+                tickerResult.textContent      = symbol;
+                currentPrice.innerHTML        = `<strong>Current Price:</strong> $${data.current_price}`;
+                predictionPrice.innerHTML     = `<strong>Predicted Price:</strong> $${data[1][0].toFixed(2)}`;
 
-                tickerResult.textContent = stockTicker.toUpperCase();
-                currentPrice.innerHTML = `<strong>Current Price:</strong> $${data.current_price}`;
-                predictionPrice.innerHTML = `<strong>Predicted Price:</strong> $${data[1][0].toFixed(2)}`;
-                
+                // populate the download form ticker
+                const downloadInput = document.getElementById('download-ticker');
+                if (downloadInput) downloadInput.value = symbol;
 
-                document.getElementById('future-1-day').textContent = `$${data[1][0].toFixed(2)}`;
-                document.getElementById('future-15-days').textContent = data[15].map(price => `$${price.toFixed(2)}`).join(', ');
-                document.getElementById('future-30-days').textContent = data[30].map(price => `$${price.toFixed(2)}`).join(', ');
+                // --- build 30-day business-day table ---
+                const tbody = document.getElementById('prediction-table-body');
+                tbody.innerHTML = '';
+                let datePointer = new Date();
 
+                data[30].forEach(price => {
+                    datePointer = getNextBusinessDay(datePointer);
+
+                    const tr      = document.createElement('tr');
+                    const tdDate  = document.createElement('td');
+                    const tdPrice = document.createElement('td');
+
+                    tdDate.textContent  = datePointer.toLocaleDateString();
+                    tdPrice.textContent = `$${price.toFixed(2)}`;
+
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdPrice);
+                    tbody.appendChild(tr);
+                });
+                // --- end table ---
+
+                // render chart
                 destroyChart();
-
                 const ctx = document.getElementById('predictionChart').getContext('2d');
                 const chartData = {
-                    labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
+                    labels: data[30].map((_, i) => `Day ${i + 1}`),
                     datasets: [{
                         label: 'Predicted Stock Price',
                         data: data[30],
@@ -95,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         tension: 0.4
                     }]
                 };
-
                 const chartOptions = {
                     responsive: true,
                     plugins: {
@@ -107,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         y: { ticks: { color: '#333' } }
                     }
                 };
-
                 predictionChart = new Chart(ctx, {
                     type: 'line',
                     data: chartData,
@@ -127,120 +149,74 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================
     // News Carousel Script
     // ========================
-    const slides = document.querySelectorAll('.news-slide');
-    let currentIndex = 0;
+    const slides       = document.querySelectorAll('.news-slide');
+    let   currentIndex = 0;
     const slideCounter = document.getElementById('slideCounter');
 
     function updateCounter() {
-        if (slideCounter) {
-            slideCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
-        }
+        if (slideCounter) slideCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
     }
-
     function showSlide(index) {
-        slides.forEach((slide, i) => {
-            if (i === index) {
-                slide.classList.add('active');
-            } else {
-                slide.classList.remove('active');
-            }
-        });
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
     }
-
     function nextSlide() {
         currentIndex = (currentIndex + 1) % slides.length;
         showSlide(currentIndex);
         updateCounter();
     }
-
     function prevSlide() {
         currentIndex = (currentIndex - 1 + slides.length) % slides.length;
         showSlide(currentIndex);
         updateCounter();
     }
-
-    if (slides.length > 0) {
+    if (slides.length) {
         showSlide(currentIndex);
         updateCounter();
-
-        setInterval(nextSlide, 4000); // ✅ Start interval only once, not inside showSlide()
-
-        const nextButton = document.getElementById('nextSlide');
-        const prevButton = document.getElementById('prevSlide');
-
-        if (nextButton && prevButton) {
-            nextButton.addEventListener('click', nextSlide);
-            prevButton.addEventListener('click', prevSlide);
-        }
+        setInterval(nextSlide, 4000);
+        document.getElementById('nextSlide')?.addEventListener('click', nextSlide);
+        document.getElementById('prevSlide')?.addEventListener('click', prevSlide);
     }
 
     // ========================
-    // Notification and Mode Toggle
+    // Notification & Dark Mode
     // ========================
     const notificationIcon = document.getElementById('notification-icon');
     const notificationsTab = document.getElementById('notifications-tab');
-    const modeIcon = document.getElementById('mode-icon');
-    const body = document.getElementById('body');
+    const modeIcon         = document.getElementById('mode-icon');
+    const body             = document.getElementById('body');
 
-    // Apply dark mode based on stored preference
     if (localStorage.getItem('darkMode') === 'enabled') {
-        body.classList.add('dark-mode');  // Apply dark mode if saved
-        // modeIcon.querySelector('i').classList.remove('fa-moon');
-        // modeIcon.querySelector('i').classList.add('fa-sun');
+        body.classList.add('dark-mode');
     }
+    notificationIcon?.addEventListener('click', e => {
+        e.preventDefault();
+        notificationsTab.classList.toggle('show-notifications');
+    });
+    modeIcon?.addEventListener('click', e => {
+        e.preventDefault();
+        body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode',
+            body.classList.contains('dark-mode') ? 'enabled' : 'disabled'
+        );
+    });
 
-    // Notifications toggle
-    if (notificationIcon && notificationsTab) {
-        notificationIcon.addEventListener('click', function(event) {
-            event.preventDefault();
-            notificationsTab.classList.toggle('show-notifications');  // Toggle visibility of notifications tab
-        });
-    }
-
-    // Dark Mode toggle
-    if (modeIcon && body) {
-        modeIcon.addEventListener('click', function(event) {
-            event.preventDefault();
-            body.classList.toggle('dark-mode');  // Toggle dark mode class
-
-            // Save dark mode preference to localStorage
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');  // Save dark mode enabled
-                // modeIcon.querySelector('i').classList.remove('fa-moon');
-                // modeIcon.querySelector('i').classList.add('fa-sun');
-            } else {
-                localStorage.setItem('darkMode', 'disabled');  // Save dark mode disabled
-                // modeIcon.querySelector('i').classList.remove('fa-sun');
-                // modeIcon.querySelector('i').classList.add('fa-moon');
-            }
-        });
-    }
-});
-
-
-//stock-ticker section added at home
-document.addEventListener("DOMContentLoaded", function () {
-    const stockTickerText = document.getElementById("stock-ticker-text");
-
-    // Sample stock data - You can replace this with dynamic data
+    // ========================
+    // Stock Ticker (Home)
+    // ========================
+    const stockTickerText = document.getElementById('stock-ticker-text');
     const stocks = [
         { symbol: "KSE 100", price: 6.95, change: -0.72 },
         { symbol: "ENERGY", price: 9.15, change: -0.36 },
-        { symbol: "BOP", price: 3.98, change: -0.12 },
-        { symbol: "KEL", price: 7.50, change: 0.35 },
+        { symbol: "BOP",    price: 3.98, change: -0.12 },
+        { symbol: "KEL",    price: 7.50, change:  0.35 },
     ];
-
-    // Function to update the ticker text
     function updateTicker() {
-        let tickerContent = "";
-        stocks.forEach(stock => {
-            tickerContent += `${stock.symbol}: $${stock.price} ${stock.change >= 0 ? '+' : ''}${stock.change} | `;
+        let text = "";
+        stocks.forEach(s => {
+            text += `${s.symbol}: $${s.price} ${s.change >= 0 ? '+' : ''}${s.change} | `;
         });
-        stockTickerText.textContent = tickerContent;
+        stockTickerText.textContent = text;
     }
-
     updateTicker();
-
-    // Optionally, you can set a timer to refresh the stock prices every 10 seconds or so.
     setInterval(updateTicker, 10000);
 });

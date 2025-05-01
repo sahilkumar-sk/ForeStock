@@ -10,12 +10,24 @@
 
 <body id="body">
 
-<!-- Stock Ticker Section - Place this directly after the header -->
+<!-- Stock Ticker Section - dynamically rendered -->
 <section id="stock-ticker">
     <div id="stock-ticker-container">
-        <span id="stock-ticker-text"></span>
+      {% for stock in trending_stocks %}
+        <span class="ticker-item {{ 'positive' if stock.change_percent >= 0 else 'negative' }}">
+          {% if stock.change_percent >= 0 %}
+            <i class="fas fa-arrow-up"></i>
+          {% else %}
+            <i class="fas fa-arrow-down"></i>
+          {% endif %}
+          {{ stock.symbol }}: {{ stock.price }}
+          {{ stock.change_percent | round(2) }}%
+        </span>
+        {% if not loop.last %}<span class="ticker-separator">|</span>{% endif %}
+      {% endfor %}
     </div>
-</section>
+  </section>
+  
 
 <header>
     <nav>
@@ -59,7 +71,7 @@
 
         {% if articles %}
             {% for article in articles %}
-                <div class="news-slide" style="background-image: url('{{ article.urlToImage if article.urlToImage else url_for('static', filename='images/default_news.jpg') }}');">
+                <div class="news-slide" style="background-image: url('{{ article.urlToImage or url_for('static', filename='images/default_news.jpg') }}');">
                     <div class="slide-content">
                         <h3>{{ article.title }}</h3>
                         <a href="{{ article.url }}" target="_blank" class="see-details">See Details</a>

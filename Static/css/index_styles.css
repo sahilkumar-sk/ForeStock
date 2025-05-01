@@ -5,7 +5,7 @@
     padding: 15px 0;
     font-size: 18px;
     font-weight: bold;
-    position: relative; /* Changed from 'fixed' to 'relative' */
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
@@ -14,17 +14,25 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    /* margin-top: 2px; Added margin to create space below the header */
 }
 
 #stock-ticker-container {
-    white-space: nowrap;
     display: flex;
+    align-items: center;
     animation: ticker 30s linear infinite;
 }
 
-#stock-ticker-text {
+.ticker-item {
+    display: inline-block;
     padding: 0 20px;
+    white-space: nowrap;
+    color: white; /* keep text white on colored background */
+}
+
+.ticker-separator {
+    display: inline-block;
+    padding: 0 10px;
+    color: rgba(255,255,255,0.7);
 }
 
 @keyframes ticker {
@@ -36,24 +44,35 @@
     }
 }
 
+/* Arrow colors only */
+.ticker-item i {
+    margin-right: 5px;
+}
+
+.ticker-item.positive i {
+    color: #28a745;  /* green up arrow */
+}
+
+.ticker-item.negative i {
+    color: #dc3545;  /* red down arrow */
+}
+
 /* ===================================
   Global Styles
 =================================== */
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;  /* Prevent horizontal scrolling */
-    width: 100%;  /* Ensure body takes full width */
+    overflow-x: hidden;
+    width: 100%;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
     background: #f5f7fa;
-    margin: 0;
-    padding-top: 90px;
     color: #333;
     transition: background-color 0.3s ease, color 0.3s ease;
-    position: center;
+    padding-top: 90px;
 }
 
 body.dark-mode {
@@ -74,14 +93,17 @@ header {
     z-index: 1000;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 body.dark-mode header {
     background-color: #2e2e2e;
     color: #fff;
 }
+
 header .logo {
-    max-height: 75px; /* Adjust as needed */
-    max-width: 250px; /* Adjust as needed */
+    max-height: 75px;
+    max-width: 250px;
 }
+
 nav {
     display: flex;
     justify-content: space-between;
@@ -96,10 +118,6 @@ nav {
     margin: 0;
 }
 
-.navbar li {
-    display: inline-block;
-}
-
 .navbar a {
     color: #1F8A70;
     text-decoration: none;
@@ -109,11 +127,7 @@ nav {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-.navbar a:hover {
-    background-color: #1F8A70;
-    color: #fff;
-}
-
+.navbar a:hover,
 .navbar .active {
     background-color: #1F8A70;
     color: #fff;
@@ -135,6 +149,7 @@ nav {
 .nav-icons .icon:hover {
     color: #007B59;
 }
+
 .search-container {
     width: 500px;
     display: flex;
@@ -157,11 +172,13 @@ nav {
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
+
 body.dark-mode #stock-search {
     background-color: #555;
     color: #fff;
     border: 1px solid #777;
 }
+
 #search-button {
     padding: 10px 20px;
     background-color: #1F8A70;
@@ -287,14 +304,17 @@ body.dark-mode .notifications-tab {
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
 }
-body.dark-mode .see-more{
+
+body.dark-mode .see-more {
     background-color: #444;
     color: #fff;
 }
+
 .see-more:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
+
 body.dark-mode .stock-card {
     background-color: #444;
     color: #fff;
@@ -304,13 +324,6 @@ body.dark-mode .stock-card h3 {
     color: #fff;
 }
 
-/* body.dark-mode .stock-card .price {
-    color: #fff;
-} */
-
-/* body.dark-mode .stock-card .change {
-    color: #fff;
-} */
 /* ===================================
   News Carousel Styles
 =================================== */
@@ -326,20 +339,19 @@ body.dark-mode .stock-card h3 {
 
 .news-carousel {
     position: relative;
-    width: 100%;  /* Full width of the viewport */
-    margin: 0 auto; /* Center the carousel */
-    /* padding: 0 20px;  Add padding to both sides */
-    box-sizing: border-box; /* Include padding in width calculation */
-    overflow: hidden;  /* Hide overflow */
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
     border-radius: 15px;
-    height: 425px;  /* Set the height for the carousel */
+    height: 425px;
     background: #fff;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .news-slide {
     position: absolute;
-    width: 100%;  /* Ensure each slide takes up full width */
+    width: 100%;
     height: 100%;
     background-size: cover;
     background-repeat: no-repeat;
@@ -352,7 +364,7 @@ body.dark-mode .stock-card h3 {
     align-items: center;
     opacity: 0;
     transition: opacity 1s ease-in-out;
-    padding-bottom: 50px;  /* Padding inside the slide */
+    padding-bottom: 50px;
 }
 
 .news-slide.active {
@@ -370,7 +382,6 @@ body.dark-mode .stock-card h3 {
     z-index: 1;
 }
 
-/* Slide Content */
 .slide-content {
     background: rgba(0,0,0,0.1);
     max-width: 600px;
@@ -404,9 +415,6 @@ body.dark-mode .stock-card h3 {
     background: #007B59;
 }
 
-/* ===================================
-  Arrows (Previous / Next)
-=================================== */
 .news-arrow {
     position: absolute;
     top: 50%;
@@ -428,7 +436,6 @@ body.dark-mode .stock-card h3 {
 .left-arrow { left: 10px; }
 .right-arrow { right: 10px; }
 
-/* Slide Counter */
 .slide-counter {
     position: absolute;
     bottom: 20px;
@@ -441,9 +448,6 @@ body.dark-mode .stock-card h3 {
     z-index: 3;
 }
 
-/* ===================================
-  Footer Styles
-=================================== */
 footer {
     background: #1F8A70;
     color: white;
@@ -511,21 +515,18 @@ footer {
     font-size: 20px;
 }
 
-/* ===================================
-  Responsive Styles (For Mobile)
-=================================== */
 @media (max-width: 768px) {
     .footer-item {
         width: 100%;
         text-align: left;
     }
     .news-carousel {
-        width: 100vw;  /* Full width on mobile */
-        height: 300px;  /* Adjust height for smaller screens */
+        width: 100vw;
+        height: 300px;
         overflow: hidden;
     }
     .news-slide {
-        width: 100%;  /* Ensure each slide takes full width */
-        background-size: cover;  /* Image should cover full width */
+        width: 100%;
+        background-size: cover;
     }
 }
