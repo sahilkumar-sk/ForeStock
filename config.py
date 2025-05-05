@@ -1,4 +1,3 @@
-# filepath: c:\Users\Sneha Batra\stock-forecaster\backend\config.py
 stock_symbols = [
     # Technology
     'AAPL', 'TSLA', 'MSFT', 'AMZN', 'GOOGL', 'META', 'NVDA', 'NFLX',
