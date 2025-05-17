@@ -1,0 +1,12 @@
+pandas
+numpy
+matplotlib
+scikit-learn
+tensorflow
+keras
+torch
+transformers
+pandas_datareader
+requests
+textblob
+python-dotenv
