@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Stock Price Forecaster</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news_styles.css') }}">
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body id="body">
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav>
+            <img src="{{ url_for('static', filename='images/ForeStock.png') }}" alt="Logo" class="logo">
+            <ul class="navbar">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('predictions') }}">Predictions</a></li>
+                <li><a href="{{ url_for('news') }}"  class="active">News</a></li>
+                <li><a href="{{ url_for('trends') }}">Trends</a></li>
+            </ul>
+                <div class="search-container">
+                    <input type="text" id="stock-search" placeholder="Search for trends or stocks...">
+                    <button type="button" id="search-button"><i class="fas fa-search"></i> Search</button>
+                </div>
+            <!-- Icons on the right -->
+            <div class="nav-icons">
+                <a href="#" class="icon" id="notification-icon"><i class="fas fa-bell"></i></a>
+                <a href="#" class="icon" id="mode-icon"><i class="fas fa-moon"></i></a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Notifications Tab -->
+    <div class="notifications-tab" id="notifications-tab">
+        <div class="notifications-content">
+            <h3>Notifications</h3>
+            <ul>
+                <li>Stock Market Hits Record Highs!</li>
+                <li>Tech Stocks Lead the Way!</li>
+                <li>Fed Signals Interest Rate Changes</li>
+                <li>New IPOs Spark Investor Interest</li>
+            </ul>
+        </div>
+    </div>
+
+    
+        <!-- News Section -->
+        <main>
+            <h1 class="page-title">Latest News</h1>
+            <div class="news-container">
+                {% if articles %}
+                    {% for article in articles %}
+                        <div class="news-card">
+                            {% if article.urlToImage %}
+                                <img src="{{ article.urlToImage }}" alt="News Image" class="news-image">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/default_news.jpg') }}" alt="Default News Image" class="news-image">
+                            {% endif %}
+                            <h3 class="news-title">{{ article.title }}</h3>
+                            <p class="news-description">{{ article.description }}</p>
+                            <a href="{{ article.url }}" target="_blank" class="read-more">Read More</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No news articles found.</p>
+                {% endif %}
+            </div>
+        </main>
+
+
+    <!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <!-- About Us Section -->
+        <div class="footer-item">
+            <h3>About Us</h3>
+            <p>ForeStock is a predictive platform that combines stock forecasting with sentiment analysis to provide real-time insights on the stock market.</p>
+        </div>
+
+        <!-- Contact Us Section -->
+        <div class="footer-item">
+            <h3>Contact Us</h3>
+            <ul class="contact-links">
+                <li>Email: <a href="mailto:contact@forestock.com">contact@forestock.com</a></li>
+                <li>Phone: +1 234 567 890</li>
+                <li>Address: 123 Stock St., New York, NY</li>
+            </ul>
+        </div>
+
+       <!-- Follow Us Section -->
+<div class="footer-item">
+    <h3>Follow Us</h3>
+    <ul class="social-links">
+        <li><a href="https://facebook.com/ForeStock" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+        <li><a href="https://twitter.com/ForeStock" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="https://linkedin.com/company/ForeStock" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+        <li><a href="https://instagram.com/ForeStock" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+    </ul>
+</div>
+
+    </div>
+</footer>
+
+
+    <!-- JavaScript for Toggle Mode and Notifications -->
+    <!-- <script>
+        // Mode Toggle (Light / Dark Mode)
+        const modeIcon = document.getElementById('mode-icon');
+        modeIcon.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Notifications Toggle (Bell Icon Click)
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationsTab = document.getElementById('notifications-tab');
+        notificationIcon.addEventListener('click', () => {
+            notificationsTab.classList.toggle('show-notifications');
+        });
+    </script> -->
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>
