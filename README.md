@@ -49,9 +49,12 @@ Includes tests for:
 
 ## Tech Stack
 
-**Backend:** Python, Flask, Keras, TensorFlow, yFinance, TextBlob, scikit-learn  
-**Frontend:** HTML, CSS, JavaScript (Flask Jinja Templates)  
-**ML/AI:** LSTM, Bidirectional LSTM, Keras Tuner, Sentiment Analysis  
+| Layer     | Technologies |
+|-----------|--------------|
+| **Backend**   | Python, Flask, Keras, TensorFlow, yFinance, TextBlob, scikit-learn |
+| **Frontend**  | HTML, CSS, JavaScript (Flask Jinja Templates) |
+| **ML / AI**   | LSTM, Bidirectional LSTM, Keras Tuner, Sentiment Analysis |
+
 
 ---
 
@@ -76,31 +79,41 @@ oreStock/
 
 ---
 
-## 📦 Installation
+##  Installation
 
-### 1 Clone the repository
-```bash
+### 1️ Clone the repository
+```
 git clone https://github.com/sahilkumar-sk/ForeStock.git
 cd ForeStock
-```
+````
 
-### 2 Install dependencies
+### 2️ Install dependencies
+
 ```
 pip install -r requirements.txt
 ```
 
-### 3 Add your NewsAPI key
-In fetch_news.py and app.py, replace:
+### 3️ Add your NewsAPI key
+
+In `fetch_news.py` and `app.py`, replace:
+
 ```
 api_key = "YOUR_NEWSAPI_KEY"
 ```
 
-### 4 Run the application
+### 4️ Run the application
+
 ```
 python app.py
 ```
 
-### Model Training
-```
+---
+
+## Model Training (Optional)
+
+If you want to retrain or tune the LSTM model:
+
+```bash
 python train_lstm_model.py
 ```
+
